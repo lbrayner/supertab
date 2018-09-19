@@ -74,6 +74,12 @@ set cpo&vim
     let g:SuperTabDefaultCompletionType = "<c-p>"
   endif
 
+  " CTRL-X CTRL-P and CTRL-X CTRL-N will switch completion type to \<c-p> or
+  " \<c-n> (search places in 'complete')
+  if !exists("g:SuperTabCtrlXCtrlPCtrlNSearchPlaces")
+    let g:SuperTabCtrlXCtrlPCtrlNSearchPlaces = 0
+  endif
+
   if !exists("g:SuperTabContextDefaultCompletionType")
     let g:SuperTabContextDefaultCompletionType = "<c-p>"
   endif
@@ -331,6 +337,16 @@ function! s:ManualCompletionEnter() " {{{
 
     if index(['insert', 'session'], g:SuperTabRetainCompletionDuration) != -1
       let b:complType = complType
+      if g:SuperTabCtrlXCtrlPCtrlNSearchPlaces
+        if b:complType == "\<c-x>\<c-p>"
+          let b:complType = "\<c-p>"
+        endif
+      endif
+      if g:SuperTabCtrlXCtrlPCtrlNSearchPlaces
+        if b:complType == "\<c-x>\<c-n>"
+          let b:complType = "\<c-n>"
+        endif
+      endif
     endif
 
     " Hack to workaround bug when invoking command line completion via <c-r>=
@@ -1141,4 +1157,4 @@ endfunction " }}}
 
 let &cpo = s:save_cpo
 
-" vim:ft=vim:fdm=marker
+" vim:ft=vim:fdm=marker:tabstop=2:shiftwidth=2
